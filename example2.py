@@ -1,15 +1,20 @@
 #!/usr/bin/python39
 from environment import evaluate, debug_draw_errors
 
-memory = [0]
+# Static side effects
+const_velocity = None
 def my_controller(velocity, terrain):
-    action = None
-    if velocity>memory[-1]: 
-        action = 0.5
+    global const_velocity
+    
+    if const_velocity is None:
+        # Assume the first input as the speed we want to keep
+        const_velocity = velocity
+
+    if velocity>const_velocity:
+        action = 0.1
     else:
         action = 1
 
-    memory.append(velocity)
     return action
 
 nfailed, errors = evaluate(my_controller,silent=False)
