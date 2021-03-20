@@ -7,8 +7,7 @@ import matplotlib.pyplot as plt
 
 print('Draw road')
 terrain = terrain_gen()
-debug_draw_terrain(terrain)
-plt.show()
+debug_draw_terrain(terrain).show()
 
 result = loop(terrain,__dumb_controller)
 if result['failed']:

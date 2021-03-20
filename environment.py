@@ -21,7 +21,13 @@ Consts
     vmin to vmax : car's bounded velocity
 
 terrain_gen
-    Generate terrain (slopes) of the road.
+    Generate terrain factor of the road. 
+    Terrain factor is sum of many factors like slope, rolling resistance, air resistance,...
+    Result is function `terrain` mapping (-inf,inf) which is the position to [-1,1] which is the terrain factor
+    smoothness is in range [1,inf)
+        1 will make the road look like cos-wave 
+        inf will make the road totally flat
+    npeaks is the number of peaks
 
 Car 
     x       : current position
@@ -71,6 +77,7 @@ def debug_draw_terrain(f,color=None):
     y = np.vectorize(f)(x)
     plt.axis((Consts.xmin, Consts.xmax, -1, 1))
     plt.plot(x,y,color=color)
+    return plt
     
 
 def debug_draw_errors(errors,color=None):
@@ -79,6 +86,7 @@ def debug_draw_errors(errors,color=None):
     plt.plot(x,y,color=color)
     x1,x2,_,_ = plt.axis()
     plt.axis((x1, x2, 0, 0.00025))
+    return plt
 
 
 @dataclass
@@ -96,7 +104,7 @@ def step(car, terrain, action) -> Car:
     return car_
 
 
-def __dumb_controller(v):
+def __dumb_controller(v,terrain):
     # Always hit gas
     return 1
 
@@ -110,8 +118,9 @@ def loop(terrain, controller,limit=10000):
         if result['nstep']>limit:
             result['failed'] = True
             return result
-
-        action = controller(car.v)
+        
+        next_input = (car.v, terrain(car.x))
+        action = controller(*next_input)
         car = step(car, terrain, action)
 
         result['x'].append(car.x)

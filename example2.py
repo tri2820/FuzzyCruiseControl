@@ -2,7 +2,7 @@
 from environment import evaluate, debug_draw_errors
 
 memory = [0]
-def my_controller(velocity):
+def my_controller(velocity, terrain):
     action = None
     if velocity>memory[-1]: 
         action = 0.5
@@ -14,5 +14,6 @@ def my_controller(velocity):
 
 nfailed, errors = evaluate(my_controller,silent=False)
 print(f'Car stuck inside valley {nfailed} times')
-debug_draw_errors(errors)
+debug_draw_errors(errors).show()
+
 
