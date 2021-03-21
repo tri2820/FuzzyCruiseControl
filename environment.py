@@ -24,6 +24,8 @@ terrain_gen
     Generate terrain factor of the road. 
     Terrain factor is sum of many factors like slope, rolling resistance, air resistance,...
     Result is function `terrain` mapping (-inf,inf) which is the position to [-1,1] which is the terrain factor
+         -1 means receiving maximum resistance, like going downhill
+         +1 means receiving maximum support, like going uphill
     smoothness is in range [1,inf)
         1 will make the road look like cos-wave 
         inf will make the road totally flat
