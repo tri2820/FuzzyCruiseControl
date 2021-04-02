@@ -24,8 +24,8 @@ terrain_gen
     Generate terrain factor of the road. 
     Terrain factor is sum of many factors like slope, rolling resistance, air resistance,...
     Result is function `terrain` mapping (-inf,inf) which is the position to [-1,1] which is the terrain factor
-         -1 means receiving maximum resistance, like going downhill
-         +1 means receiving maximum support, like going uphill
+         -1 means receiving maximum support, like going downhill
+         +1 means receiving maximum resistance, like going uphill
     smoothness is in range [1,inf)
         1 will make the road look like cos-wave 
         inf will make the road totally flat
@@ -87,7 +87,7 @@ def debug_draw_errors(errors,color=None):
     y = errors
     plt.plot(x,y,color=color)
     x1,x2,_,_ = plt.axis()
-    plt.axis((x1, x2, 0, 0.00025))
+    plt.axis((x1, x2, 0, 0.000025))
     return plt
 
 
@@ -96,7 +96,7 @@ class Car:
     v : float = 0.01
     x : float = -0.5
     force : float = 0.001
-    
+
 
 def step(car, terrain, action) -> Car:
     car_ = Car()
@@ -111,7 +111,7 @@ def __dumb_controller(v,terrain):
     return 1
 
 
-def loop(terrain, controller,limit=10000):
+def loop(terrain, controller,limit=1000):
     result = {'x': [], 'v': [], 'c': [], 'nstep':0, 'failed': False}
     car = Car()
 
@@ -136,27 +136,24 @@ def error(vs):
     return np.var(vs)
 
 
-def evaluate(controller, silent=True):
+def evaluate(controller, silent=True, r=range(2,10), s=range(10,15,1)):
     nfailed = 0
     errors = []
     t = 0
 
-    for npeaks in range(1,11):
-        for smoothness in np.linspace(1,3,20):
+    for npeaks in r:
+        for smoothness in s:
             t+=1
-            if not silent:
-                print(f'Test {t}.')
             terrain = terrain_gen(npeaks=npeaks, smoothness=smoothness)
             result = loop(terrain, controller)
             if result['failed']:  
-                if not silent:
-                    print(f' Failed!')
+                if not silent: print('x',end='')
                 nfailed+=1
                 continue
             errors.append(error(result['v']))
-            if not silent:
-                    print(f' Success!')
-    
+            if not silent: print(f'.',end='')
+    print()
+
     return nfailed, errors
 
 

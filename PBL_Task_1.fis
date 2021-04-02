@@ -1,0 +1,51 @@
+[System]
+Name='PBL_Task_1'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=9
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='Velocity'
+Range=[-0.07 0.07]
+NumMFs=3
+MF1='Negative_Velocity':'trimf',[-0.07 -0.07 0]
+MF2='Zero_Velocity':'trimf',[-0.07 0 0.07]
+MF3='Positive_Velocity':'trimf',[0 0.07 0.07]
+
+[Input2]
+Name='Terrain_factor'
+Range=[-1 1]
+NumMFs=3
+MF1='Negative_Terrain':'trapmf',[-1.115 -1.015 -0.7 -0.3]
+MF2='Zero_Terrain':'trimf',[-0.7 0 0.7]
+MF3='Positive_Terrain':'trapmf',[0.3 0.7 1.068 1.868]
+
+[Output1]
+Name='Acceleration'
+Range=[0 1]
+NumMFs=7
+MF1='Reduce_speed_(MAX)':'psigmf',[32.96 -0.08333 -32.96 0.08333]
+MF2='Reduce_speed_(LITTLE)':'psigmf',[32.96 0.08333 -32.96 0.25]
+MF3='Reduce_speed_(MIN)':'psigmf',[32.96 0.25 -32.96 0.4167]
+MF4='No_change':'psigmf',[32.96 0.4167 -32.96 0.5833]
+MF5='Speed_up_(MIN)':'psigmf',[32.96 0.5833 -32.96 0.75]
+MF6='Speed_up_(LITTLE)':'psigmf',[32.96 0.75 -32.96 0.9167]
+MF7='Speed_up_(MAX)':'psigmf',[32.96 0.9167 -32.96 1.083]
+
+[Rules]
+1 1, 5 (1) : 1
+1 2, 6 (1) : 1
+1 3, 7 (1) : 1
+2 1, 2 (1) : 1
+2 2, 4 (1) : 1
+2 3, 6 (1) : 1
+3 1, 1 (1) : 1
+3 2, 2 (1) : 1
+3 3, 3 (1) : 1

@@ -7,7 +7,10 @@ import matplotlib.pyplot as plt
 
 print('Draw road')
 terrain = terrain_gen()
-debug_draw_terrain(terrain).show()
+plt = debug_draw_terrain(terrain)
+plt.xlabel('Example road segment')
+plt.legend()
+plt.show()
 
 result = loop(terrain,__dumb_controller)
 if result['failed']:
@@ -16,7 +19,13 @@ if result['failed']:
 
 print(f'Error : {error(result["v"])}')
 
+print('Testing dumb controller')
 print('Draw velocity and terrain over time')
-plt.plot(range(result['nstep']),result['v'],'r')
-plt.plot(range(result['nstep']),result['c'],'b')
+plt.plot(range(result['nstep']),result['v'],'r',label='velocity')
+plt.plot(range(result['nstep']),result['c'],'b',label='terrain factor')
+    
+plt.ylabel('Value (Corresponding unit)')
+plt.xlabel('Time')
+
+plt.legend()
 plt.show()
